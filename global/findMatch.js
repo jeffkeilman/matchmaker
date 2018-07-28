@@ -17,30 +17,62 @@ const _calculateModifier = function (diff) {
     return (diff / constants.GAMES_PLAYED_GAP) * constants.SKILL_MODIFIER;
 }
 
+const _calculateDifferenceModified = function (playerOneMMR, playerTwoMMR) {
+    return Math.abs((playerOneMMR - playerOneMod) - (playerTwoMMR - playerTwoMod));
+}
+
+const _handleMatch = function (x, y) {
+    console.log('Match found:', lobby[x].id, lobby[y].id);
+
+    // remove both players from lobby
+    lobby.splice(x, 1);
+    lobby.splice(y - 1, 1);
+}
+
 const findMatches = function () {
     // so long as the lobby has two or more players, check for matches
     if (!(lobby.length >= 2)) return;
 
+    let mustMatch = false;
+    let leastGap = Infinity;
+    let match = null;
+
     for (let x = 0; x < lobby.length; x++) {
+        const playerOne = lobby[x];
+
+        // if a player has been waiting for MAX_WAIT_TIME or longer, they must be matched this round
+        if (new Date().getTime() - lobby[x].timestamp >= constants.MAX_WAIT_TIME) mustMatch = true;
+
         for (let y = 0; y < lobby.length; y++) {
             if (y === x) continue;
 
-            const playerOne = lobby[x];
             const playerTwo = lobby[y];
 
             _applyModifier(playerOne.userData.games_played, playerTwo.userData.games_played);
 
-            // check if player is within acceptable MMR range
-            if (Math.abs((playerOne.userData.mmr - playerOneMod) - (playerTwo.userData.mmr - playerTwoMod)) <= constants.MAX_SKILL_GAP) {
-                console.log('Match found:', playerOne.id, playerTwo.id);
+            if (!mustMatch) {
+                // check if player is within acceptable MMR range
+                if (_calculateDifferenceModified(playerOne.userData.mmr, playerTwo.userData.mmr) <= constants.MAX_SKILL_GAP) {
+                    _handleMatch(x, y);
+                }
+            } else {
+                // just find the closest match
+                const skillDifference = _calculateDifferenceModified(playerOne.userData.mmr, playerTwo.userData.mmr);
 
-                // remove both players from lobby
-                lobby.splice(x, 1);
-                lobby.splice(y - 1, 1);
+                if (skillDifference < leastGap) {
+                    leastGap = skillDifference;
+                    match = y;
+                }
             }
 
             playerOneMod = 0;
             playerTwoMod = 0;
+        }
+        if (mustMatch) {
+            _handleMatch(x, match);
+            mustMatch = false;
+            leastGap = Infinity;
+            match = null;
         }
     }
 }

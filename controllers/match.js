@@ -23,7 +23,7 @@ const getMatch = function (token, res) {
     if (lobby.length === constants.MAX_LOBBY_CAPACITY) {
         res.status(503).send('Lobby full');
     }
-    
+
     // Some fake auth
     const userId = _authUser(token);
 
@@ -36,7 +36,11 @@ const getMatch = function (token, res) {
             // we may have wrong user id in database, probably need to notify user somehow
             if (!userData) res.status(500).send('Player not found');
 
-            lobby.push({ id: userId, userData: JSON.parse(userData) });
+            lobby.push({ 
+                id: userId, 
+                timestamp: new Date().getTime(),
+                userData: JSON.parse(userData) 
+            });
 
             res.send(lobby);
         })
