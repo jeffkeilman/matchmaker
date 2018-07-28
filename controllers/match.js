@@ -1,7 +1,6 @@
 const auth = require('../mock/auth');
 const getUser = require('../mock/user');
 
-let userInfo = null;
 const lobby = [];
 
 const _authUser = function (token) {
@@ -15,28 +14,23 @@ const _getUserData = function (userId) {
         .then(() => {
             return getUser(userId);
         })
-        .then(userData => {
-            userInfo = JSON.parse(userData);
-        })
         .catch(err => console.log(err))
 }
 
 const getMatch = function (token, res) {
-    let userId = null;
-
     // Some fake auth
-    userId = _authUser(token);
+    const userId = _authUser(token);
 
     // user not found, unauthorized
     if (!userId) res.status(401).send('Unauthorized: User not found');
 
     // have an id, get the user data
     _getUserData(userId)
-        .then(() => {
+        .then((userData) => {
             // we may have wrong user id in database, probably need to notify user somehow
-            if (!userInfo) res.status(400).send('Downstream user not found');
+            if (!userData) res.status(400).send('Downstream user not found');
 
-            lobby.push({ id: userId, userInfo });
+            lobby.push({ id: userId, userData: JSON.parse(userData) });
 
             res.send(lobby);
         });
