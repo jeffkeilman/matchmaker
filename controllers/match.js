@@ -4,6 +4,9 @@ const getUser = require('../mock/user');
 
 const lobby = require('../global/lobby');
 
+let userData = null;
+let userId = null;
+
 const _authUser = function (token) {
     // check store of users for match
     return auth(token);
@@ -18,40 +21,42 @@ const _getUserData = function (userId) {
         .catch(err => console.log(err))
 }
 
-const _addToLobby = function (socketId, userId, userData) {
+const addToLobby = function (socketId) {
     lobby.push({ 
         playerId: userId,
         timestamp: new Date().getTime(),
         userData: JSON.parse(userData),
         socketId
     });
+    userId = null;
+    userData = null;
 }
 
-const getMatch = function (token, res, io) {
+const getMatch = function (token, res) {
     // If the lobby is full, abort
     if (lobby.length === constants.MAX_LOBBY_CAPACITY) {
         res.status(503).send('Lobby full');
     }
 
-    let userData = null;
-    let userId = null;
-
-    io.on('connection', socket => {
-        _addToLobby(socket.id, userId, userData);
-    });
-
     // Some fake auth
     userId = _authUser(token);
 
-    // // user not found, unauthorized
-    // if (!userId) res.status(401).send('Unauthorized: User not found');
+    // user not found, unauthorized
+    if (!userId) res.status(401).send('Unauthorized: User not found');
 
     _getUserData(userId)
         .then(data => {
             userData = data;
             res.sendFile(__dirname + '/static/lobby.html');
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err)
+            userId = null;
+            userData = null;
+        });
 }
 
-module.exports = getMatch;
+module.exports = {
+    getMatch,
+    addToLobby
+};

@@ -31,10 +31,6 @@ const _handleMatch = function (x, y) {
 
     socketIO.sockets.connected[playerOne.socketId].disconnect();
     socketIO.sockets.connected[playerTwo.socketId].disconnect();
-
-    // remove both players from lobby
-    lobby.splice(x, 1);
-    lobby.splice(y - 1, 1);
 }
 
 const findMatches = function (io) {
