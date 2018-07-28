@@ -1,5 +1,7 @@
 module.exports = {
     FIND_MATCH_INTERVAL: 1000,
+    GAMES_PLAYED_GAP: 50,
     MAX_LOBBY_CAPACITY: Infinity,
-    MAX_SKILL_GAP: 200
+    MAX_SKILL_GAP: 200,
+    SKILL_MODIFIER: 500
 }
