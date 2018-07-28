@@ -18,31 +18,38 @@ const _getUserData = function (userId) {
         .catch(err => console.log(err))
 }
 
-const getMatch = function (token, res) {
+const _addToLobby = function (socketId, userId, userData) {
+    lobby.push({ 
+        playerId: userId,
+        timestamp: new Date().getTime(),
+        userData: JSON.parse(userData),
+        socketId
+    });
+}
+
+const getMatch = function (token, res, io) {
     // If the lobby is full, abort
     if (lobby.length === constants.MAX_LOBBY_CAPACITY) {
         res.status(503).send('Lobby full');
     }
 
+    let userData = null;
+    let userId = null;
+
+    io.on('connection', socket => {
+        _addToLobby(socket.id, userId, userData);
+    });
+
     // Some fake auth
-    const userId = _authUser(token);
+    userId = _authUser(token);
 
-    // user not found, unauthorized
-    if (!userId) res.status(401).send('Unauthorized: User not found');
+    // // user not found, unauthorized
+    // if (!userId) res.status(401).send('Unauthorized: User not found');
 
-    // have an id, get the user data
     _getUserData(userId)
-        .then(userData => {
-            // we may have wrong user id in database, probably need to notify user somehow
-            if (!userData) res.status(500).send('Player not found');
-
-            lobby.push({ 
-                id: userId, 
-                timestamp: new Date().getTime(),
-                userData: JSON.parse(userData) 
-            });
-
-            res.send(lobby);
+        .then(data => {
+            userData = data;
+            res.sendFile(__dirname + '/static/lobby.html');
         })
         .catch(err => console.log(err));
 }

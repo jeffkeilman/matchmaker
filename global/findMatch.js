@@ -3,6 +3,7 @@ const lobby = require('./lobby');
 
 let playerOneMod = 0;
 let playerTwoMod = 0;
+let socketIO = null;
 
 const _applyModifier = function (playerOneGames, playerTwoGames) {
     // apply a modifier based on difference in games played
@@ -22,16 +23,25 @@ const _calculateDifferenceModified = function (playerOneMMR, playerTwoMMR) {
 }
 
 const _handleMatch = function (x, y) {
-    console.log('Match found:', lobby[x].id, lobby[y].id);
+    const playerOne = lobby[x];
+    const playerTwo = lobby[y];
+
+    socketIO.to(playerOne.socketId).emit('match found', 'You\'ve been matched with: ' + playerTwo.playerId);
+    socketIO.to(playerTwo.socketId).emit('match found', 'You\'ve been matched with: ' + playerOne.playerId);
+
+    socketIO.sockets.connected[playerOne.socketId].disconnect();
+    socketIO.sockets.connected[playerTwo.socketId].disconnect();
 
     // remove both players from lobby
     lobby.splice(x, 1);
     lobby.splice(y - 1, 1);
 }
 
-const findMatches = function () {
+const findMatches = function (io) {
     // so long as the lobby has two or more players, check for matches
     if (!(lobby.length >= 2)) return;
+
+    socketIO = io;
 
     let mustMatch = false;
     let leastGap = Infinity;

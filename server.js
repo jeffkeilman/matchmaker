@@ -2,15 +2,17 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
-require('./routes')(app);
+require('./routes')(app, io);
 
 const port = process.env.PORT;
 const findMatch = require('./global/findMatch');
 const constants = require('./global/constants');
 
-app.listen(port, () => {
+http.listen(port, () => {
     console.log('Listening on:', port);
     // run matchmaking forever
-    setInterval(findMatch, constants.FIND_MATCH_INTERVAL);
+    setInterval(() => findMatch(io), constants.FIND_MATCH_INTERVAL);
 });
