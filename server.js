@@ -11,8 +11,10 @@ const port = process.env.PORT;
 const findMatch = require('./global/findMatch');
 const constants = require('./global/constants');
 
-http.listen(port, () => {
+const server = http.listen(port, () => {
     console.log('Listening on:', port);
     // run matchmaking forever
     setInterval(() => findMatch(io), constants.FIND_MATCH_INTERVAL);
 });
+
+module.exports = server;

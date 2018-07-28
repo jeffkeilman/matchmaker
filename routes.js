@@ -13,8 +13,10 @@ module.exports = function(app, io) {
 
     app.get('/match', (req, res) => {
         const token = req.headers.authorization;
-        if (!token) res.status(401).send('Access denied: no token provided');
-
-        matchController.getMatch(token, res);
+        if (token) {
+            matchController.getMatch(token, res);
+        } else {
+            res.status(401).send('Access denied: no token provided');
+        }
     });
 }

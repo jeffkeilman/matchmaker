@@ -41,19 +41,21 @@ const getMatch = function (token, res) {
     // Some fake auth
     userId = _authUser(token);
 
-    // user not found, unauthorized
-    if (!userId) res.status(401).send('Unauthorized: User not found');
-
-    _getUserData(userId)
-        .then(data => {
-            userData = data;
-            res.sendFile(__dirname + '/static/lobby.html');
-        })
-        .catch(err => {
-            console.log(err)
-            userId = null;
-            userData = null;
-        });
+    if (userId) {
+        _getUserData(userId)
+            .then(data => {
+                userData = data;
+                res.status(201).sendFile(__dirname + '/static/lobby.html');
+            })
+            .catch(err => {
+                console.log(err)
+                userId = null;
+                userData = null;
+            });
+    } else {
+        // user not found, unauthorized
+        res.status(401).send('Unauthorized: User not found');
+    }
 }
 
 module.exports = {
