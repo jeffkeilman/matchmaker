@@ -1,6 +1,12 @@
 # Matching service
 An Express API built on Node.js that matches players for 1v1 matches based on [MMR](https://dota2.gamepedia.com/Matchmaking_Rating). Players are matched by skill as well as experience.
 
+Run with:
+`npm dev run`
+
+Test with:
+`npm test`
+
 ## Assumptions
 - A service must exist to pull player MMR and total games played
 - API token auth already exists with a user lookup table
