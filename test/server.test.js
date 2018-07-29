@@ -15,7 +15,7 @@ describe('Loading service', () => {
     it('responds to /match with auth header.', (done) => {
         request(server)
             .get('/match')
-            .set('authorization', 'lol')
+            .set('authorization', '777')
             .expect(201, done);
     });
 

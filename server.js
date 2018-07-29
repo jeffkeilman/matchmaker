@@ -7,7 +7,7 @@ const io = require('socket.io')(http);
 
 require('./routes')(app, io);
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 const findMatch = require('./global/findMatch').findMatches;
 const constants = require('./global/constants');
 

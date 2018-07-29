@@ -1,8 +1,8 @@
 const auth = function (token) {
     const users = {
-        lol: 1,
-        test: 2,
-        something: 3
+        999: 1,
+        888: 2,
+        777: 3
     }
 
     return users[token];
