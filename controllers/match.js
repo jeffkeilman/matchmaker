@@ -1,4 +1,5 @@
-const auth = require('../mock/auth');
+
+const authUser = require('../global/authUser');
 const constants = require('../global/constants');
 const getUser = require('../mock/user');
 
@@ -6,11 +7,6 @@ const lobby = require('../global/lobby');
 
 let userData = null;
 let userId = null;
-
-const _authUser = function (token) {
-    // check store of users for match
-    return auth(token);
-}
 
 const _getUserData = function (userId) {
     // hit mock server to get user data
@@ -39,7 +35,7 @@ const getMatch = function (token, res) {
     }
 
     // Some fake auth
-    userId = _authUser(token);
+    userId = authUser(token);
 
     if (userId) {
         _getUserData(userId)

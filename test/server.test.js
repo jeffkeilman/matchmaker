@@ -12,24 +12,20 @@ describe('Loading service', () => {
         server.close(done);
     });
 
-    after(() => {
-        process.exit(0);
-    });
-
-    it('responds to /match with auth header', (done) => {
+    it('responds to /match with auth header.', (done) => {
         request(server)
             .get('/match')
             .set('authorization', 'lol')
             .expect(201, done);
     });
 
-    it('401s to /match without auth header', (done) => {
+    it('401s to /match without auth header.', (done) => {
         request(server)
             .get('/match')
             .expect(401, done);
     });
 
-    it('401s to /match with incorrect auth header', (done) => {
+    it('401s to /match with incorrect auth header.', (done) => {
         request(server)
             .get('/match')
             .set('authorization', 'foobar')
