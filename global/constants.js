@@ -3,6 +3,6 @@ module.exports = {
     GAMES_PLAYED_GAP: 50,
     MAX_LOBBY_CAPACITY: Infinity,
     MAX_SKILL_GAP: 200,
-    MAX_WAIT_TIME: 20000,
+    MAX_WAIT_TIME: 60000,
     SKILL_MODIFIER: 500
 }

@@ -22,7 +22,7 @@ const _calculateDifferenceModified = function (playerOneMMR, playerTwoMMR) {
     return Math.abs((playerOneMMR - playerOneMod) - (playerTwoMMR - playerTwoMod));
 }
 
-const handleMatch = function (x, y) {
+exports.handleMatch = function (x, y) {
     const playerOne = lobby[x];
     const playerTwo = lobby[y];
 
@@ -33,8 +33,7 @@ const handleMatch = function (x, y) {
     socketIO.sockets.connected[playerTwo.socketId].disconnect();
 }
 
-const findMatches = function (io) {
-    console.log(lobby);
+exports.findMatches = function (io) {
     // so long as the lobby has two or more players, check for matches
     if (!(lobby.length >= 2)) return;
 
@@ -60,7 +59,7 @@ const findMatches = function (io) {
             if (!mustMatch) {
                 // check if player is within acceptable MMR range
                 if (_calculateDifferenceModified(playerOne.userData.mmr, playerTwo.userData.mmr) <= constants.MAX_SKILL_GAP) {
-                    handleMatch(x, y);
+                    exports.handleMatch(x, y);
                 }
             } else {
                 // just find the closest match
@@ -76,15 +75,10 @@ const findMatches = function (io) {
             playerTwoMod = 0;
         }
         if (mustMatch) {
-            handleMatch(x, match);
+            exports.handleMatch(x, match);
             mustMatch = false;
             leastGap = Infinity;
             match = null;
         }
     }
 }
-
-module.exports = {
-    findMatches,
-    handleMatch
-};

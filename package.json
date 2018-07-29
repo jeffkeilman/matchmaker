@@ -1,7 +1,7 @@
 {
-  "name": "cold_cuts",
+  "name": "matching_service",
   "version": "1.0.0",
-  "description": "Cold cuts",
+  "description": "Match players in 1v1 matches",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
