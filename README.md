@@ -2,7 +2,7 @@
 An Express API built on Node.js that matches players for 1v1 matches based on [MMR](https://dota2.gamepedia.com/Matchmaking_Rating). Players are matched by skill as well as experience.
 
 Run with:
-`npm dev run`
+`npm run dev`
 
 Test with:
 `npm test`
