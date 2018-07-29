@@ -46,4 +46,4 @@ In order to mitigate this, we could implement a player information cache with re
 
 The service would need to be deployed on a server with significant storage to hold the cache (approx slightly less than 1 tb), configured with PM2. 3-4 could be deployed in strategic locations around the world to decrease latency for our international players.
 
-All in all, I think that the wait time for responses from the server will not be significant with this approach given that players are already used to waiting 15+ minutes in matchmaking lobbies and this should be significantly faster assuming plenty of players.
+All in all, I think that the wait time for responses from the server will not be significant with this approach given that players are already used to waiting 15+ minutes in matchmaking lobbies and this should be significantly faster assuming plenty of players.g
